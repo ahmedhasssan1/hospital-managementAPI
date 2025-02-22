@@ -1,0 +1,16 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "rules": {
+    "prettier/prettier": 0
+  },
+  "prettier/prettier": [
+    "error",
+    {},
+    {
+      "fileInfoOptions": {
+        "withNodeModules": true
+      }
+    }
+  ]
+}

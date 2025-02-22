@@ -1,0 +1,1 @@
+SELECT * from reset_tokens;
