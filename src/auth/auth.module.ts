@@ -10,15 +10,22 @@ import { jwtStrategy } from './strategy/jwt-strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResetToken } from './typeorm/resetToken/resetToken';
 import { MailService } from './mail.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ResetToken]),
     UserModule,
     PassportModule,
-    JwtModule.register({
-      secret: '123',
-      signOptions: { expiresIn: '1h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '1h'),
+        },
+      }),
     }),
   ],
   providers: [AuthService, LocalStrategy, jwtStrategy, MailService],

@@ -24,7 +24,7 @@ export class userServices {
     const { password, email } = createuser;
 
     const reaptedEmail = await this.userRepo.findOne({
-      where: { email: createuser.email },
+      where: { email: email },
     });
     if (reaptedEmail) {
       throw new BadRequestException('this user already exist ');
