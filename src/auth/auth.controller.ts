@@ -3,10 +3,10 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './strategy/local-guard';
 import { jwtauthGuard } from './strategy/jwt-authguard';
 import { authPayload } from './dto/create-auth.dto';
-import { LocalStrategy } from './strategy/local.strategy';
 import { changePass } from './dto/change-pass';
 import { emailDto } from './dto/emailCheck';
 import { ResetPass } from './dto/resetPassword-dto';
+import { USer } from 'src/typeorm/entities/users';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -17,16 +17,14 @@ export class AuthController {
   }
   @UseGuards(jwtauthGuard)
   @Post('Profile')
-  jwtAuth(@Request() req) {
-    return req.user;
+  jwtAuth(@Request() req) : USer{
+    return req.user
   }
 
   @UseGuards(jwtauthGuard)
   @Post('changePassword')
   changePassword(@Request() req, @Body() changePass: changePass) {
     const { password, newPassword } = changePass;
-    console.log('Received req.user:', req.user); // Log the user from JWT
-    console.log('Received changePass:', changePass); // Log the request body
     return this.authService.changePassword(req.user, {
       password,
       newPassword,

@@ -10,7 +10,9 @@ import { ResetToken } from './auth/typeorm/resetToken/resetToken';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal:true
+    }),
     UserModule,
     AuthModule,
     TypeOrmModule.forRoot({

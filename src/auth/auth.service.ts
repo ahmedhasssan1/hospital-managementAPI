@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { MailService } from './mail.service';
+import { AuthResult } from './strategy/jwt-strategy';
 
 @Injectable()
 export class AuthService {
@@ -65,14 +66,19 @@ export class AuthService {
       accessToken: this.jwtservice.sign(payload),
     };
   }
-  async changePassword(user, changePass1: changePass) {
+  async changePassword(user: AuthResult, changePass1: changePass) {
     const { password, newPassword } = changePass1;
     const userExist = await this.userservice.findOneUser(user.userId);
     console.log(user.userId);
+console.log('');
+
+    console.log('debugging ');
+    
     console.log('user exist ', userExist);
     if (!userExist) {
       throw new UnauthorizedException('this user no longer exist');
     }
+    
     const valid = await argon.verify(userExist.password, password);
 
     if (!valid) {

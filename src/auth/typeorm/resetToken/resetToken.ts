@@ -11,5 +11,5 @@ export class ResetToken {
   expireDAte: Date;
 
   @Column()
-  createAt: Date;
+  createAt: Date;   
 }
