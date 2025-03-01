@@ -1,1 +1,1 @@
-CREATE 
+SELECT * from users;

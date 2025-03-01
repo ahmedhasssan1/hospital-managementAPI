@@ -12,6 +12,16 @@
       "name": "root",
       "database": "users",
       "username": "root"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 4000,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "Database (2)",
+      "database": "clinc",
+      "username": "postgres"
     }
   ]
 }

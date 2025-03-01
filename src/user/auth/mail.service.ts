@@ -7,7 +7,6 @@ export class MailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,

@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { userServices } from './../user/user.service';
+import { userServices } from '../user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 import { authPayload } from './dto/create-auth.dto';
@@ -66,19 +66,22 @@ export class AuthService {
       accessToken: this.jwtservice.sign(payload),
     };
   }
+  genertateToken(userId: string, email: string): string {
+    const payload = { id: userId, email: email };
+    return this.jwtservice.sign(payload);
+  }
   async changePassword(user: AuthResult, changePass1: changePass) {
     const { password, newPassword } = changePass1;
     const userExist = await this.userservice.findOneUser(user.userId);
     console.log(user.userId);
-console.log('');
 
     console.log('debugging ');
-    
+
     console.log('user exist ', userExist);
     if (!userExist) {
       throw new UnauthorizedException('this user no longer exist');
     }
-    
+
     const valid = await argon.verify(userExist.password, password);
 
     if (!valid) {

@@ -17,8 +17,8 @@ export class AuthController {
   }
   @UseGuards(jwtauthGuard)
   @Post('Profile')
-  jwtAuth(@Request() req) : USer{
-    return req.user
+  jwtAuth(@Request() req): USer {
+    return req.user;
   }
 
   @UseGuards(jwtauthGuard)
