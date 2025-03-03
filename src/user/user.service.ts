@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { USer } from 'src/typeorm/entities/users';
+import { USer } from 'src/common/entities/users.entity';
 import { createUSerParam } from './../utils/type';
 import { Repository } from 'typeorm';
 import { updateDto } from './dto/update.dto';

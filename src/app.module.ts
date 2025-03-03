@@ -2,13 +2,17 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { USer } from './typeorm/entities/users';
+import { USer } from './common/entities/users.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './user/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ResetToken } from './user/auth/typeorm/resetToken/resetToken';
 import { DoctorModule } from './doctor/doctor.module';
 import { PatientsModule } from './patients/patients.module';
+import { NurseModule } from './nurse/nurse.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { MeddicalAppointemtsModule } from './meddical_appointemts/meddical_appointemts.module';
+import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 
 @Module({
   imports: [
@@ -29,6 +33,10 @@ import { PatientsModule } from './patients/patients.module';
     }),
     DoctorModule,
     PatientsModule,
+    NurseModule,
+    RoomsModule,
+    MeddicalAppointemtsModule,
+    PrescriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
