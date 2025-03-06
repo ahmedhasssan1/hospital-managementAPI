@@ -8,9 +8,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
     
     @Column()
     available:boolean;
-
     
-
     @Column()
     typeOfRoom:string;
 

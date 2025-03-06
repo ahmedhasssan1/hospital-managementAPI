@@ -9,9 +9,8 @@ export class Patient{
     @PrimaryGeneratedColumn()
     id:number;
     
-    @Column()
-    @ManyToOne(()=>Account)
-    user_id:Account;
+    @ManyToOne(() => Account, account => account.patients)
+    user: Account;
 
     @Column()
     inital_diagnosis:string;
@@ -19,6 +18,7 @@ export class Patient{
     
     @OneToMany(() => Room,(room) => room.patient)
     rooms: Room[];
+
     @OneToMany(() => medicalAppointments, (medicalAppointments) => medicalAppointments.patient_id)
    medicalAppointments: medicalAppointments[];
 

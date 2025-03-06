@@ -1,10 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Patient } from "src/patients/typeOrm/patient.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'ACCOUNTS'})
 export class Account{
 
     @PrimaryGeneratedColumn()
     id:number;
+
+    // @OneToMany(() => Doctor, (doctor) => doctor.user)
+    // doctors: Doctor[];
 
     @Column()
     name:string;
@@ -21,6 +25,10 @@ export class Account{
     @Column()
     role:string;
 
+    @OneToMany(() => Patient, patient => patient.user)
+    patients: Patient[];
+
 
 
 }
+

@@ -1,28 +1,40 @@
-import { Account } from "src/common/entities/account.entity";
-import { medicalAppointments } from "src/meddical_appointemts/entity/appointemnt.entity";
-import { Nurse } from "src/nurse/typeorm/nurse.entity";
-import { prescriprions } from "src/prescriptions/entity/prescripttion.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { medicalAppointments } from 'src/meddical_appointemts/entity/appointemnt.entity';
+import { Nurse } from 'src/nurse/typeorm/nurse.entity';
+import { prescriprions } from 'src/prescriptions/entity/prescripttion.entity';
+import {
+  Column,
+  Entity,
+  
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({name:'doctor'})
-export class Doctor{
-    @PrimaryGeneratedColumn()
-    id:number;
+@Entity({ name: 'doctor' })
+export class Doctor {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    @ManyToOne(()=>Account)
-    user_id:Account;
-    
-    @Column()
-    major:string;
+  // @ManyToOne(() => Account)
+  // user_id: Account;
 
-    @OneToMany(() => Nurse, (nurse) => nurse.doctor)  
-    nurses: Nurse[];
+  @Column()
+  name: string;
 
-    @OneToMany(() => medicalAppointments, (appointment) => appointment.doctor)
-    medicalAppointments: medicalAppointments[];
+  @Column()
+  major: string;
 
-    @OneToMany(()=>prescriprions,(prescription)=>prescription.doctor_id)
-    prescription:prescriprions[];
+  // @Column()
+  // email:string;
 
+  @Column()
+  password: string;
+
+  @OneToMany(() => Nurse, nurse => nurse.doctor)
+  nurses: Nurse[];
+
+  @OneToMany(() => medicalAppointments, appointment => appointment.doctor)
+  medicalAppointments: medicalAppointments[];
+
+  @OneToMany(() => prescriprions, prescription => prescription.doctor_id)
+  prescription: prescriprions[];
 }

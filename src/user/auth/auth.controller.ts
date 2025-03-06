@@ -7,7 +7,6 @@ import { changePass } from './dto/change-pass';
 import { emailDto } from './dto/emailCheck';
 import { ResetPass } from './dto/resetPassword-dto';
 import { USer } from 'src/common/entities/users.entity';
-import { userServices } from '../user.service';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
