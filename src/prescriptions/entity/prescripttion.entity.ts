@@ -10,7 +10,7 @@ export class prescriprions{
     @ManyToOne(()=>Patient,(patient)=>patient.prescription,{onDelete:"CASCADE"})
      patient_id:prescriprions;
     
-    @ManyToOne(()=>Doctor,(doctor)=>doctor.prescription,{onDelete:"CASCADE"})
+    @ManyToOne(()=>Doctor,(doctor)=>doctor.prescription )
     doctor_id:Doctor;
 
     @Column({type:"text"})

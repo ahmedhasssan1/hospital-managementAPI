@@ -13,7 +13,6 @@ import { MeddicalAppointemtsModule } from './meddical_appointemts/meddical_appoi
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { Doctor } from './doctor/typeOrm/doctor.entity';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,10 +27,9 @@ import { Doctor } from './doctor/typeOrm/doctor.entity';
       username: 'postgres',
       database: process.env.DATABASE,
       password: process.env.DATABASE_PASSWORD,
-      // entities: [USer, ResetToken,Doctor],
+      // entities: [User, ResetToken,Doctor],
       // entities: [__dirname + '/../**/*.entity.ts'],
       autoLoadEntities: true,
-
       synchronize: true,
     }),
 
@@ -42,10 +40,8 @@ import { Doctor } from './doctor/typeOrm/doctor.entity';
     MeddicalAppointemtsModule,
     PrescriptionsModule,
     TypeOrmModule.forFeature([Doctor]), // Include it here too
-
   ],
   controllers: [AppController],
   providers: [AppService],
-  
 })
 export class AppModule {}

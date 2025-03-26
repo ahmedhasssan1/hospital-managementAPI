@@ -49,7 +49,6 @@ export class AuthService {
     }
     //debug
     console.log('Stored Hashed Password:', user1.password);
-    console.log('Entered Password:', password);
 
     if (!user1.password) {
       console.error('Error: User has no password stored in DB!', user1);
@@ -58,10 +57,11 @@ export class AuthService {
 
     const valid = await argon.verify(user1.password, password);
     if (!valid) {
+      throw new UnauthorizedException();
       // throw new UnauthorizedException('Invalid password');
     }
 
-    const payload = { email: user1.email, sub: user1.id };
+    const payload = { email: user1.email,name:user1.name,role:user1.role, sub: user1.id };
     return {
       accessToken: this.jwtservice.sign(payload),
     };
@@ -90,7 +90,7 @@ export class AuthService {
     const hashPassword = await argon.hash(newPassword);
     console.log(' old pass:  ', userExist.password);
     console.log(' newPassword : ', hashPassword);
-    await this.userservice.updateUSer(user.userId, {
+    await this.userservice.updateUser(user.userId, {
       password: hashPassword,
     });
     return 'password changed successfully';
@@ -135,6 +135,6 @@ export class AuthService {
     const newHashPass = await argon.hash(newPassword);
 
     console.log(newHashPass);
-    await this.userservice.updateUSer(findUser.id, { password: newHashPass });
+    await this.userservice.updateUser(findUser.id, { password: newHashPass });
   }
 }

@@ -6,7 +6,7 @@ import { authPayload } from './dto/create-auth.dto';
 import { changePass } from './dto/change-pass';
 import { emailDto } from './dto/emailCheck';
 import { ResetPass } from './dto/resetPassword-dto';
-import { USer } from 'src/common/entities/users.entity';
+import { User } from 'src/common/entities/users.entity';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -17,7 +17,7 @@ export class AuthController {
   }
   @UseGuards(jwtauthGuard)
   @Post('Profile')
-  jwtAuth(@Request() req): USer {
+  jwtAuth(@Request() req): User {
     return req.user;
   }
 

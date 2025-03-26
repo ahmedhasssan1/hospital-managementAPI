@@ -9,12 +9,14 @@ import { NurseModule } from 'src/nurse/nurse.module';
 import { PatientsModule } from 'src/patients/patients.module';
 import { MeddicalAppointemtsModule } from 'src/meddical_appointemts/meddical_appointemts.module';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Doctor,Account,Nurse]),
-  NurseModule,PatientsModule,MeddicalAppointemtsModule
+  NurseModule,PatientsModule,MeddicalAppointemtsModule,
 ],
   controllers: [DoctorController],
   providers: [DoctorService],
+
   
 })
 export class DoctorModule {}

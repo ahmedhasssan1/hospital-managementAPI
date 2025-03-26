@@ -1,5 +1,5 @@
 import { Patient } from "src/patients/typeOrm/patient.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'room'})
  export class Room{
@@ -8,12 +8,15 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
     
     @Column()
     available:boolean;
-    
+
+    @Column()
+    room_number:number
+
     @Column()
     typeOfRoom:string;
 
-    @ManyToOne(()=>Patient,(patient)=>patient.rooms)
-    patient:Patient;
+    @OneToMany(()=>Patient,(patient)=>patient.room)
+    patient:Patient[];
     
 
 }

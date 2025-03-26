@@ -35,7 +35,7 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateuser: updateDto,
   ) {
-    return this.userservice.updateUSer(id, updateuser);
+    return this.userservice.updateUser(id, updateuser);
   }
 
   @Delete(':id')

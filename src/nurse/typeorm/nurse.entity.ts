@@ -1,15 +1,35 @@
+import { Exclude } from "class-transformer";
+import { User } from "src/common/entities/users.entity";
 import { Doctor } from "src/doctor/typeOrm/doctor.entity";
-import {  Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {  Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'nurse'})
 export class Nurse{
     @PrimaryGeneratedColumn()
     id:number
 
-    @ManyToOne(()=>Doctor,doctor=>doctor.nurses)
-    doctor:Doctor;
+    @Column()
+    name:string
+
+    @ManyToOne(() => User, (user) => user.id, { eager: true,onDelete: 'CASCADE' })
+    @JoinColumn() 
+    user_id: User;
 
     @Column()
+    major:string
+
+    @Column()
+    email:string
+
+    @Column()
+    @Exclude()
+    password:string
+    
+    @Column()
     shift:string;
+
+    @ManyToOne(()=>Doctor,doctor=>doctor.nurses,{onDelete:"SET NULL"})
+    doctor:Doctor;
+
 
 }

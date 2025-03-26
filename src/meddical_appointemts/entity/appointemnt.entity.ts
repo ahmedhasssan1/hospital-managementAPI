@@ -11,7 +11,7 @@ export class medicalAppointments{
     @ManyToOne(()=>Patient,(patient)=>patient.medicalAppointments,{onDelete:"CASCADE"})
     patient_id:Patient;
 
-   @ManyToOne(() => Doctor, (doctor) => doctor.medicalAppointments, { onDelete: "CASCADE" }) 
+   @ManyToOne(() => Doctor, (doctor) => doctor.medicalAppointments) 
    doctor: Doctor; // Foreign key reference to DOCTORS.ID
 
   @Column({ type: "timestamp" }) 
