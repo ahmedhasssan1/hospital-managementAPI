@@ -7,13 +7,15 @@ import * as argon from 'argon2';
 import { createDoctorParam } from './dto/savedIndata';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { DocNurse } from './dto/doctorNurse.dto';
-import { Patient } from 'src/patients/typeOrm/patient.entity';
+import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
+import { identity } from 'rxjs';
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor) private doctorRepo: Repository<Doctor>,
     @InjectRepository(Nurse) private nurseRepo: Repository<Nurse>,
+    @InjectRepository(prescriptions) private PrescRepo: Repository<prescriptions>,
     
   ) {}
 
@@ -58,19 +60,27 @@ export class DoctorService {
 
   }
   async getDoc(name:string){
-    const findDoctor=await this.doctorRepo.findOne({where:{name:name},relations:['nurses','patients']})
+    const findDoctor=await this.doctorRepo.findOne({where:{name:name},relations:['nurses','patients','patients.room','patients.prescription']})
     if(!findDoctor){
       throw new UnauthorizedException("this doctor is not exist")
-    
+      
     }
+    
+    
     const patients=findDoctor.patients.map((ele)=>({
       name:ele.name,
-      contact_info:ele.contact_info
+      contact_info:ele.contact_info,
+      room:ele.room,
+      prescription:ele.prescription
+     
+      
     }))
     const nurses=findDoctor.nurses.map((ele)=>({
       name:ele.name,
       
     }))
+    console.log('debugging eoom',patients);
+    
     const {password,...updateDoc}=findDoctor
     return {patients,nurses};
   }

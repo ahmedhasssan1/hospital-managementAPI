@@ -1,8 +1,7 @@
-import { join } from "path";
 import { User } from "src/common/entities/users.entity";
 import { Doctor } from "src/doctor/typeOrm/doctor.entity";
 import { medicalAppointments } from "src/meddical_appointemts/entity/appointemnt.entity";
-import { prescriprions } from "src/prescriptions/entity/prescripttion.entity";
+import {  prescriptions } from "src/prescriptions/entity/prescripttion.entity";
 import { Room } from "src/rooms/entity/room.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -34,7 +33,7 @@ export class Patient{
     @OneToMany(() => medicalAppointments, (medicalAppointments) => medicalAppointments.patient_id)
    medicalAppointments: medicalAppointments[];
 
-   @OneToMany(()=>prescriprions,(prescriprion)=>prescriprion.patient_id)
-   prescription:prescriprions;
+   @OneToMany(()=>prescriptions,(prescriprion)=>prescriprion.patient)
+   prescription:prescriptions;
 
 }

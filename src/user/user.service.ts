@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/entities/users.entity';
@@ -51,7 +52,12 @@ export class userServices {
           
         }
       }
-      console.log('debugging ',room);
+      if(!room?.available){
+        throw new UnauthorizedException('this room un availbale')
+      }else{
+        room.available=false
+        await this.RoomRepo.save(room)
+      }
 
 
      let findDoctor: Doctor | undefined = undefined;
@@ -72,12 +78,14 @@ export class userServices {
         role
       })
       const savedUser=await this.userRepo.save(newuser);
+
       const patient= this.patientRepo.create({
         name,
         contact_info,
         user:savedUser,
         doctor:findDoctor,
-        room:room || undefined
+        room:room || undefined,
+        
       })
       await this.patientRepo.save(patient);
       return patient
@@ -115,9 +123,9 @@ export class userServices {
     }
     if (createuser.role === 'nurse') {
       const nurse = this.nurseRepo.create({
-        email: createuser.email,
-        name: createuser.name,
-        major: createuser.major,
+        email: newUser.email,
+        name: newUser.name,
+        major: major,
         password: hashpassword,
         user_id: saveUSer,
         shift: shift,
@@ -139,10 +147,19 @@ export class userServices {
     return user;
   }
   async updateUser(id: number, updateUser: updateDto) {
-    return await this.userRepo.update({ id }, { ...updateUser });
+    const user= await this.userRepo.findOne({where:{id} });
+    if(!user){
+      throw new UnauthorizedException("this user not exist");
+
+    }
+   
+    await this.userRepo.update({id},{...updateUser})
+    return this.userRepo.findOne({where:{id}})
+
   }
 
   async deleteUser(id: number) {
     return await this.userRepo.delete({ id });
   }
+  
 }

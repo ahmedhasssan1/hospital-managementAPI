@@ -1,6 +1,5 @@
 
 export type  createUserParam = 
-
 {
   name:string;
   email?: string;

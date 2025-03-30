@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entity/room.entity';
 import { Repository } from 'typeorm';
-import { CreataRoomDto } from './dto/createRoom.dto';
+import { CreataRoomDto, updateRoom } from './dto/createRoom.dto';
 
 @Injectable()
 export class RoomsService {
@@ -13,7 +13,7 @@ export class RoomsService {
             available:createRoom.available,
             typeOfRoom:createRoom.typeOFRoom
         })
-        const findRoom=await this.roomService.find({where:{room_number:createRoom.room_number}})
+        const findRoom=await this.roomService.findOne({where:{room_number:createRoom.room_number}})
         if(findRoom){
             throw new UnauthorizedException('this room already exist');
         }
@@ -22,5 +22,12 @@ export class RoomsService {
         await this.roomService.save(room);
         return 'room added succesfully';
         
+    }
+    async availableRoom(updateDto:updateRoom){
+        const findRoom=await this.roomService.findOne({where:{room_number:updateDto.room_number}});
+        if(findRoom){
+            findRoom.available=true;
+            await this.roomService.save(findRoom);
+        }
     }
 }

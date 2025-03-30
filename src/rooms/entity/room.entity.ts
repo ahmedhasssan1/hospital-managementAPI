@@ -1,5 +1,5 @@
 import { Patient } from "src/patients/typeOrm/patient.entity";
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'room'})
  export class Room{

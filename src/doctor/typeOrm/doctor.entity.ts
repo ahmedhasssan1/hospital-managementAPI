@@ -3,7 +3,7 @@ import { User } from 'src/common/entities/users.entity';
 import { medicalAppointments } from 'src/meddical_appointemts/entity/appointemnt.entity';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { Patient } from 'src/patients/typeOrm/patient.entity';
-import { prescriprions } from 'src/prescriptions/entity/prescripttion.entity';
+import { prescriptions   } from 'src/prescriptions/entity/prescripttion.entity';
 import {
   Column,
   Entity,
@@ -41,6 +41,6 @@ export class Doctor {
   @OneToMany(() => medicalAppointments, (appointment) => appointment.doctor)
   medicalAppointments: medicalAppointments[];
 
-  @OneToMany(() => prescriprions, (prescription) => prescription.doctor_id)
-  prescription: prescriprions[];
+  
+
 }

@@ -8,10 +8,11 @@ import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { NurseModule } from 'src/nurse/nurse.module';
 import { PatientsModule } from 'src/patients/patients.module';
 import { MeddicalAppointemtsModule } from 'src/meddical_appointemts/meddical_appointemts.module';
+import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Doctor,Account,Nurse]),
+  imports: [TypeOrmModule.forFeature([Doctor,Account,Nurse,prescriptions]),
   NurseModule,PatientsModule,MeddicalAppointemtsModule,
 ],
   controllers: [DoctorController],
