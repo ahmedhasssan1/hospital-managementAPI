@@ -29,7 +29,6 @@ export class NurseService {
         await this.nurseRepo.update({id},{...updateNurseDto});
         return await this.nurseRepo.findOne({where:{id}})
 
-
-
     }
+    
 }

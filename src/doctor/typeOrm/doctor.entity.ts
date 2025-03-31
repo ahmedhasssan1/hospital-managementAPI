@@ -3,7 +3,6 @@ import { User } from 'src/common/entities/users.entity';
 import { medicalAppointments } from 'src/meddical_appointemts/entity/appointemnt.entity';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { Patient } from 'src/patients/typeOrm/patient.entity';
-import { prescriptions   } from 'src/prescriptions/entity/prescripttion.entity';
 import {
   Column,
   Entity,
@@ -18,7 +17,7 @@ export class Doctor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.id, { eager: true,onDelete: 'CASCADE'  })
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE'  })
   @JoinColumn() // Maps the foreign key column
   user_id: User;
 
@@ -38,7 +37,7 @@ export class Doctor {
   @OneToMany(() => Nurse, (nurse) => nurse.doctor)
   nurses: Nurse[];
 
-  @OneToMany(() => medicalAppointments, (appointment) => appointment.doctor)
+  @OneToMany(() => medicalAppointments, (appointment) => appointment.doctor,{eager:true})
   medicalAppointments: medicalAppointments[];
 
   

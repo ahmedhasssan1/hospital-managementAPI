@@ -6,7 +6,6 @@ import { createDto } from './dto/create.dto';
 import { Patient } from 'src/patients/typeOrm/patient.entity';
 import { Doctor } from 'src/doctor/typeOrm/doctor.entity';
 import { updateDto } from './dto/update.dto';
-import { find } from 'rxjs';
 
 @Injectable()
 export class PrescriptionsService {
@@ -21,7 +20,7 @@ export class PrescriptionsService {
         if(!findpatient){
             throw new NotFoundException("this patient not exist");
         }
-        const patientDoctor=await this.DocotorRepo.findOne({where:{id:findpatient.doctor.id}});
+        const patientDoctor=await this.DocotorRepo.findOne({where:{id:findpatient.doctor?.id}});
         if(!patientDoctor){
             throw new NotFoundException("this doctor not exist")
         }
@@ -41,18 +40,18 @@ export class PrescriptionsService {
          }
     }
     async getPatientPresc(id:number){
-        const getPatientPresc=await this.PatientService.findOne({where:{id}});
+        const getPatientPresc=await this.PatientService.findOne({where:{id},relations:["prescription"]});
         if(!getPatientPresc){
             throw new NotFoundException('patient not exist');
         }
         
-        const getPrescforPatient=await this.prescreptionRepo.findOne({where:{patient:{id:getPatientPresc.id}}})
+        // const getPrescforPatient=await this.prescreptionRepo.findOne({where:{patient:{id:getPatientPresc.id}}})
         
-        if(!getPrescforPatient){
-            throw new NotFoundException("no medication exist for this patient")
-        }
+        // if(!getPrescforPatient){
+        //     throw new NotFoundException("no medication exist for this patient")
+        // }
         
-        return getPrescforPatient;
+        return getPatientPresc;
 
     }
     async updatePresc(updateDto:updateDto,id:number){

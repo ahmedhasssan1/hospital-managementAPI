@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Doctor } from './typeOrm/doctor.entity';
 import { Repository } from 'typeorm';
@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import * as argon from 'argon2';
 import { createDoctorParam } from './dto/savedIndata';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
-import { DocNurse } from './dto/doctorNurse.dto';
+import { DocNurse, nurseDto } from './dto/doctorNurse.dto';
 import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
 import { identity } from 'rxjs';
 
@@ -84,6 +84,27 @@ export class DoctorService {
     const {password,...updateDoc}=findDoctor
     return {patients,nurses};
   }
+  async deleteNurseFromDocoor(id:number,NurseDoc:nurseDto){
+     const doctor=await this.doctorRepo.findOne({where:{id},relations:['nurses']})
+     if(!doctor){
+      throw new NotFoundException("this doctor no more exist");
+    }
+    const nurse=await this.nurseRepo.findOne({where:{name:NurseDoc.nurse}})
+    if(!nurse){
+      throw new NotFoundException("this nurse not exist") 
+    }
+    const nurseAccistedWithDoc= doctor.nurses.findIndex((n)=>n.id===nurse.id)
+    if(nurseAccistedWithDoc===-1){
+      throw new NotFoundException("this nurse not with this doctor");
+    }
 
+    doctor.nurses.splice(nurseAccistedWithDoc,1);
+    await this.doctorRepo.save(doctor);
+
+    return { message: 'Nurse removed from the doctor successfully' };
+
+
+
+  }
   
 }

@@ -139,7 +139,7 @@ export class userServices {
     return saveUSer;
   }
   async findOneUser(id: number) {
-    const user = await this.userRepo.findOneBy({ id });
+    const user = await this.userRepo.findOne({where:{ id }});
     if (!user) {
       throw new NotFoundException('this user not exist');
     }

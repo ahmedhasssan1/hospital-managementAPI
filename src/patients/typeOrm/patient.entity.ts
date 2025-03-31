@@ -10,7 +10,7 @@ export class Patient{
     @PrimaryGeneratedColumn()
     id:number;
     
-    @ManyToOne(() => User, user =>user.id ,{ eager: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => User, user =>user.id ,{ onDelete: 'CASCADE' })
     @JoinColumn()
     user: User;
 
@@ -20,20 +20,20 @@ export class Patient{
     @Column()
     contact_info:string
 
-    @ManyToOne(()=>Doctor,(doctor)=>doctor.patients,{onDelete:"SET NULL"})
+    @ManyToOne(()=>Doctor,(doctor)=>doctor.patients,{nullable:true,onDelete:"SET NULL"})
     @JoinColumn()
-    doctor:Doctor
+    doctor:Doctor  |null     //docotor_id=docotor.id
 
 
 
-    @ManyToOne(() => Room,(room) => room.id,{onDelete:"SET NULL"})
+    @ManyToOne(() => Room,(room) => room.id,{ onDelete:"SET NULL"})
     @JoinColumn()
     room: Room;
 
-    @OneToMany(() => medicalAppointments, (medicalAppointments) => medicalAppointments.patient_id)
+    @OneToMany(() => medicalAppointments, (medicalAppointments) => medicalAppointments.patient_id,{onDelete:'CASCADE'})
    medicalAppointments: medicalAppointments[];
 
-   @OneToMany(()=>prescriptions,(prescriprion)=>prescriprion.patient)
+   @OneToMany(()=>prescriptions,(prescriprion)=>prescriprion.patient,{onDelete:'CASCADE'})
    prescription:prescriptions;
 
 }

@@ -1,4 +1,11 @@
-export class DocNurse{
-    "doctorName":string
-    "nurseName":string
+import { types } from "util"
+
+export type  DocNurse={
+
+    doctorName:string
+    nurseName:string
+}
+export type nurseDto={
+    id:number
+    nurse:string
 }

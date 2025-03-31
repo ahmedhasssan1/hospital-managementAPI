@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entity/room.entity';
 import { Repository } from 'typeorm';
@@ -24,10 +24,8 @@ export class RoomsService {
         
     }
     async availableRoom(updateDto:updateRoom){
-        const findRoom=await this.roomService.findOne({where:{room_number:updateDto.room_number}});
-        if(findRoom){
-            findRoom.available=true;
-            await this.roomService.save(findRoom);
-        }
+        const findRoom=await this.roomService.update({room_number:updateDto.room_number},{available:true});
+       
+        return {message:'room available now'};
     }
 }

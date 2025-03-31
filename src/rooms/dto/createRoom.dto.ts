@@ -6,6 +6,6 @@ export class CreataRoomDto{
 
 }
 
-export class updateRoom{
+export class   updateRoom{
     room_number:number
 }

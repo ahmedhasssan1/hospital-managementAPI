@@ -11,7 +11,6 @@ export class createDto {
   role:string
   @IsOptional()
   shift:string
-  @IsOptional()
   contact_info:string
   @IsOptional()
   roomID:number
