@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { PatientsService } from './patients.service';
+import { addDoc } from './dto/addDoc.dto';
 
 @Controller('patients')
 export class PatientsController {

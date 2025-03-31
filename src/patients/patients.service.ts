@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Patient } from './typeOrm/patient.entity';
 import { Repository } from 'typeorm';
 import { Doctor } from 'src/doctor/typeOrm/doctor.entity';
+import { addDoc } from './dto/addDoc.dto';
 
 @Injectable()
 export class PatientsService {
