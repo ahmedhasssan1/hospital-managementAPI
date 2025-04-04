@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Nurse } from './typeorm/nurse.entity';
 import { Repository } from 'typeorm';
@@ -29,6 +29,14 @@ export class NurseService {
         await this.nurseRepo.update({id},{...updateNurseDto});
         return await this.nurseRepo.findOne({where:{id}})
 
+    }
+    async findNurse(id:number){
+       
+        const nurse=await this.nurseRepo.findOne({where:{id},relations:['doctor','doctor.patients','doctor.patients.room']})
+        if(!nurse){
+            throw new NotFoundException(" this nurse not exist")
+        }       
+       return {nurse}
     }
     
 }

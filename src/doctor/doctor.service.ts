@@ -8,7 +8,6 @@ import { createDoctorParam } from './dto/savedIndata';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { DocNurse, nurseDto } from './dto/doctorNurse.dto';
 import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
-import { identity } from 'rxjs';
 
 @Injectable()
 export class DoctorService {
@@ -19,7 +18,7 @@ export class DoctorService {
     
   ) {}
 
-  async createDoctor(createDoc: createDoctorParam) {
+  async createDoctor(createDoc: createDoctorParam):Promise<Partial<Doctor>> {
     const { password,name } = createDoc;
     const repeatedEmail=await this.doctorRepo.findOne({where:{name:name}})
     if (repeatedEmail){
@@ -35,18 +34,18 @@ export class DoctorService {
     
     return this.doctorRepo.save(newDoc);
   }
-  async addNurseToDoc(nurseDocDto:DocNurse){
+  async addNurseToDoc(nurseDocDto:DocNurse):Promise<Partial<Doctor>>{
     const nurses:Nurse[]=[];
     const findNurse=await this.nurseRepo.findOne({where:{name:nurseDocDto.nurseName}
     });
     if(!findNurse){
-      throw new UnauthorizedException('this nurse not existing')
+      throw new NotFoundException('this nurse not existing')
     }
     
     nurses.push(findNurse);
     const findDoc=await this.doctorRepo.findOne({where:{name:nurseDocDto.doctorName},relations:['nurses']})
     if(!findDoc){
-      throw new UnauthorizedException("rhis user is not exist")
+      throw new NotFoundException("this user is not exist")
     }
 
  
@@ -55,36 +54,18 @@ export class DoctorService {
 
 
     const updateDoc= await this.doctorRepo.save(findDoc);
-    const {password,...doctorWithoutPassword}=updateDoc;
-    return doctorWithoutPassword;
+    return updateDoc;
 
   }
-  async getDoc(name:string){
+  async getDoc(name:string):Promise<{patients:any[],nurses:any[]}>{
     const findDoctor=await this.doctorRepo.findOne({where:{name:name},relations:['nurses','patients','patients.room','patients.prescription']})
     if(!findDoctor){
       throw new UnauthorizedException("this doctor is not exist")
       
     }
-    
-    
-    const patients=findDoctor.patients.map((ele)=>({
-      name:ele.name,
-      contact_info:ele.contact_info,
-      room:ele.room,
-      prescription:ele.prescription
-     
-      
-    }))
-    const nurses=findDoctor.nurses.map((ele)=>({
-      name:ele.name,
-      
-    }))
-    console.log('debugging eoom',patients);
-    
-    const {password,...updateDoc}=findDoctor
-    return {patients,nurses};
+    return findDoctor;
   }
-  async deleteNurseFromDocoor(id:number,NurseDoc:nurseDto){
+  async deleteNurseFromDocoor(id:number,NurseDoc:nurseDto):Promise<{message:string}>{
      const doctor=await this.doctorRepo.findOne({where:{id},relations:['nurses']})
      if(!doctor){
       throw new NotFoundException("this doctor no more exist");

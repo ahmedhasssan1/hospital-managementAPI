@@ -12,6 +12,9 @@ import { RoomsModule } from './rooms/rooms.module';
 import { MeddicalAppointemtsModule } from './meddical_appointemts/meddical_appointemts.module';
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { Doctor } from './doctor/typeOrm/doctor.entity';
+import { AdminModule } from './admin/admin.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { treansformInterceptor } from './common/interceptor/custom.interceptor';
 
 @Module({
   imports: [
@@ -37,11 +40,18 @@ import { Doctor } from './doctor/typeOrm/doctor.entity';
     PatientsModule,
     NurseModule,
     RoomsModule,
+    AdminModule,
     MeddicalAppointemtsModule,
     PrescriptionsModule,
-    TypeOrmModule.forFeature([Doctor]), // Include it here too
+    TypeOrmModule.forFeature([Doctor]),
+    AdminModule, // Include it here too
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide:APP_INTERCEPTOR,
+      useClass:treansformInterceptor
+    }
+  ],
 })
 export class AppModule {}

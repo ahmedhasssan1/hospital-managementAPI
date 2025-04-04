@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreataRoomDto, updateRoom } from './dto/createRoom.dto';
 
@@ -13,6 +13,14 @@ export class RoomsController {
   @Patch('updateRoom')
   async updateRoom(@Body() updatedto:updateRoom){
      return this.roomsService.availableRoom(updatedto)
+  }
+  @Get('allRooms')
+  allRooms(){
+    return this.roomsService.getAllRoom();
+  }
+  @Get('freeRooms')
+  freeRooms(){
+    return this.roomsService.getFreeRooms()
   }
   
 }

@@ -6,26 +6,38 @@ import { CreataRoomDto, updateRoom } from './dto/createRoom.dto';
 
 @Injectable()
 export class RoomsService {
-    constructor(@InjectRepository(Room) private roomService:Repository<Room>){}
+    constructor(@InjectRepository(Room) private roomRepo:Repository<Room>){}
     async createRoom(createRoom:CreataRoomDto){
-        const room=this.roomService.create({
+        const room=this.roomRepo.create({
             room_number:createRoom.room_number,
             available:createRoom.available,
             typeOfRoom:createRoom.typeOFRoom
         })
-        const findRoom=await this.roomService.findOne({where:{room_number:createRoom.room_number}})
+        const findRoom=await this.roomRepo.findOne({where:{room_number:createRoom.room_number}})
         if(findRoom){
             throw new UnauthorizedException('this room already exist');
         }
         
         
-        await this.roomService.save(room);
+        await this.roomRepo.save(room);
         return 'room added succesfully';
         
     }
     async availableRoom(updateDto:updateRoom){
-        const findRoom=await this.roomService.update({room_number:updateDto.room_number},{available:true});
-       
+        const findRoom = await this.roomRepo.findOne({ where: { room_number: updateDto.room_number } });
+    if (!findRoom) {
+        throw new NotFoundException("This room no longer exists");
+    }
+    await this.roomRepo.update({ room_number: updateDto.room_number }, { available: true });
+
         return {message:'room available now'};
+    }
+    async getAllRoom():Promise<Room[]>{
+        const allRooms=await this.roomRepo.find();
+        return allRooms;
+    }
+    async getFreeRooms():Promise<Room[]>{
+        const FreeRooms=await this.roomRepo.find({where:{available:true}});
+        return FreeRooms;
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { NurseService } from './nurse.service';
 import { createNurseDto } from './dto/createNurse.dto';
 import { updateNurseDto } from './dto/update.dto';
@@ -16,4 +16,9 @@ export class NurseController {
     return this.nurseService.updateNurse(updateDto,id)
 
   }
+  @Get(':id')
+  getNurseInfo(@Param('id',ParseIntPipe)id:number){
+    return this.nurseService.findNurse(id);
+  }
+
 }

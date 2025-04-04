@@ -11,7 +11,7 @@ export class Nurse{
     @Column()
     name:string
 
-    @ManyToOne(() => User, (user) => user.id, { eager: true,onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.id, {onDelete: 'CASCADE' })
     @JoinColumn() 
     user_id: User;
 

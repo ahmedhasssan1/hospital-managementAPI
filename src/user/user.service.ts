@@ -14,6 +14,7 @@ import { Doctor } from 'src/doctor/typeOrm/doctor.entity';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { Patient } from 'src/patients/typeOrm/patient.entity';
 import { Room } from 'src/rooms/entity/room.entity';
+import { Admin } from 'src/admin/entity/admin.entity';
 
 @Injectable()
 export class userServices {
@@ -23,6 +24,7 @@ export class userServices {
     @InjectRepository(Doctor) private doctorRepo: Repository<Doctor>,
     @InjectRepository(Patient) private patientRepo: Repository<Patient>,
     @InjectRepository(Room) private RoomRepo: Repository<Room>,
+    @InjectRepository(Admin) private adminRepo: Repository<Admin>,
   ) {}
 
   async findUsers() {
@@ -37,58 +39,9 @@ export class userServices {
     
    
     const { password, email, role, name,roomID , major, shift,contact_info,doctorID } = createuser;
-      console.log('debugging roomid ',roomID);
       
     if (role === 'patient') {
-      if(!name || !contact_info){
-        throw new BadRequestException('require named and contact_info of the patient');
-      }
-      let room:Room | null=null ;
-      if(roomID){
-        room=await this.RoomRepo.findOne( {where:{id:roomID} } )
-        
-        if(!room){
-          throw new BadRequestException('Room not found');
-          
-        }
-      }
-      if(!room?.available){
-        throw new UnauthorizedException('this room un availbale')
-      }else{
-        room.available=false
-        await this.RoomRepo.save(room)
-      }
-
-
-     let findDoctor: Doctor | undefined = undefined;
-    if (doctorID) {
-      findDoctor = await this.doctorRepo.findOne({ where: { id: doctorID } }) ??undefined;
-      if (!findDoctor) {
-        throw new BadRequestException('Doctor not found');
-      }
-    } else {
-      throw new BadRequestException('Doctor ID is required');
-    }
-
-      
-    
-      const newuser=this.userRepo.create({
-        name,
-        contact_info,
-        role
-      })
-      const savedUser=await this.userRepo.save(newuser);
-
-      const patient= this.patientRepo.create({
-        name,
-        contact_info,
-        user:savedUser,
-        doctor:findDoctor,
-        room:room || undefined,
-        
-      })
-      await this.patientRepo.save(patient);
-      return patient
+     return this.createPatient(name, contact_info, roomID, doctorID)
     }
 
 
@@ -113,31 +66,106 @@ export class userServices {
 
 
     if (role === 'doctor') {
-      const doctor = this.doctorRepo.create({
-        name: name,
-        major: major, // Assuming major is part of createUserParam
-        password: hashpassword,
-        user_id: saveUSer, // Pass the saved User entity
-      });
-      await this.doctorRepo.save(doctor);
+      if (!major || !email) {
+        throw new BadRequestException('Major or email  is required for nurses');
+      }
+      return this.createDoctor(name,major,hashpassword,newUser)
     }
-    if (createuser.role === 'nurse') {
-      const nurse = this.nurseRepo.create({
-        email: newUser.email,
-        name: newUser.name,
-        major: major,
-        password: hashpassword,
-        user_id: saveUSer,
-        shift: shift,
-      });  
-      await this.nurseRepo.save(nurse);
+    if (role === 'nurse') {
+      if (!major || !email) {
+        throw new BadRequestException('Major or email  is required for nurses');
+      }
+     return this.createNurse(email,name,major,hashpassword,newUser,shift)
     }
-
-
-  
+    if(role==='admin'){
+      if (!email) {
+        throw new BadRequestException('Email is required for admin users');
+      }
+      return this.CreateAdmin(name,email,hashpassword,newUser)
+    }
 
     return saveUSer;
   }
+
+
+
+  private async createPatient(name: string, contact_info: string, roomID?: number, doctorID?: number) {
+    if (!name || !contact_info) {
+      throw new BadRequestException('Name and contact info are required for patients');
+    }
+
+    let room: Room | null = null;
+    if (roomID) {
+      room = await this.RoomRepo.findOne({ where: { id: roomID } });
+      if (!room) throw new BadRequestException('Room not found');
+      if (!room.available) throw new BadRequestException('This room is unavailable');
+
+      room.available = false;
+      await this.RoomRepo.save(room);
+    }
+
+    if (!doctorID) throw new BadRequestException('Doctor ID is required');
+    const doctor = await this.doctorRepo.findOne({ where: { id: doctorID } });
+    if (!doctor) throw new BadRequestException('Doctor not found');
+
+    // Create a User entry for the patient (without email/password)
+    const patientUser = this.userRepo.create({
+      name,
+      role: 'patient',
+      createAt: new Date(),
+    });
+
+    const savedPatientUser = await this.userRepo.save(patientUser);
+
+    const patient = this.patientRepo.create({
+      name,
+      contact_info,
+      user: savedPatientUser, // Link to User entity
+      doctor,
+      room: room || undefined,
+    });
+
+    return this.patientRepo.save(patient);
+  }
+
+  private async createDoctor(name:string,major:string,password:string,user:User){
+
+    const doctor = this.doctorRepo.create({
+      name,
+      major: major, // Assuming major is part of createUserParam
+      password: password,
+      user_id: user, // Pass the saved User entity
+    });
+    await this.doctorRepo.save(doctor);
+    return doctor;
+  }
+  private async createNurse(email:string,name:string,major:string,password:string,user:User,shift:string){
+    const nurse = this.nurseRepo.create({
+      email,
+      name,
+      major,
+      password,
+      user_id:user,
+      shift: shift,
+    }); 
+    console.log('debugging ',nurse);
+     
+    await this.nurseRepo.save(nurse);
+    return nurse;
+
+  }
+  private async CreateAdmin(name:string,email:string,password:string,user):Promise<Admin>{
+   
+    const admin=this.adminRepo.create({
+        name,
+        email,
+        password,
+        user:user.id
+    })
+    await this.adminRepo.save(admin);
+    return admin;
+  }
+
   async findOneUser(id: number) {
     const user = await this.userRepo.findOne({where:{ id }});
     if (!user) {
@@ -157,7 +185,7 @@ export class userServices {
     return this.userRepo.findOne({where:{id}})
 
   }
-
+  
   async deleteUser(id: number) {
     return await this.userRepo.delete({ id });
   }

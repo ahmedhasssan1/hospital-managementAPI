@@ -7,10 +7,15 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { createDto } from './dto/create.dto';
 import { updateDto, updateUser } from './dto/update.dto';
 import { userServices } from './user.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from './auth/rolesAuth/role.guard';
+import { Roles } from './auth/rolesAuth/role.descerotaor';
+import { USerRole } from 'src/common/enum/Role.enum';
 
 @Controller('users')
 export class UserController {
@@ -37,8 +42,9 @@ export class UserController {
   ) {
     return this.userservice.updateUser(id, updateuser);
   }
-  
+  @UseGuards(AuthGuard('jwt'),RolesGuard)
   @Patch(':id')
+  @Roles(USerRole.admin)
   updateprofile(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateuser: updateUser,
