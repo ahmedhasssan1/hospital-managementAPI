@@ -1,35 +1,39 @@
-import { Exclude } from "class-transformer";
-import { User } from "src/common/entities/users.entity";
-import { Doctor } from "src/doctor/typeOrm/doctor.entity";
-import {  Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude } from 'class-transformer';
+import { User } from 'src/user/entitiy/users.entity';
+import { Doctor } from 'src/doctor/typeOrm/doctor.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({name:'nurse'})
-export class Nurse{
-    @PrimaryGeneratedColumn()
-    id:number
+@Entity({ name: 'nurse' })
+export class Nurse {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name:string
+  @Column()
+  name: string;
 
-    @ManyToOne(() => User, (user) => user.id, {onDelete: 'CASCADE' })
-    @JoinColumn() 
-    user_id: User;
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user_id: User;
 
-    @Column()
-    major:string
+  @Column()
+  major: string;
 
-    @Column()
-    email:string
+  @Column()
+  email: string;
 
-    @Column()
-    @Exclude()
-    password:string
-    
-    @Column()
-    shift:string;
+  @Column()
+  @Exclude()
+  password: string;
 
-    @ManyToOne(()=>Doctor,doctor=>doctor.nurses,{onDelete:"SET NULL"})
-    doctor:Doctor;
+  @Column()
+  shift: string;
 
-
+  @ManyToOne(() => Doctor, (doctor) => doctor.nurses, { onDelete: 'SET NULL' })
+  doctor: Doctor;
 }

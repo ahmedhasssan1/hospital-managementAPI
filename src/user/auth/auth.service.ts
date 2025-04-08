@@ -36,8 +36,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const { password: _, ...res } = user;
-    return res;
+  
+    return user;
   }
 
   async login(authPayload: authPayload) {

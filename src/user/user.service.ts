@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/common/entities/users.entity';
+import { User } from 'src/user/entitiy/users.entity';
 import { createUserParam } from './../utils/type';
 import { Repository } from 'typeorm';
 import { updateDto } from './dto/update.dto';
@@ -36,14 +36,21 @@ export class userServices {
   }
 
   async createUser(createuser: createUserParam) {
-    
-   
-    const { password, email, role, name,roomID , major, shift,contact_info,doctorID } = createuser;
-      
-    if (role === 'patient') {
-     return this.createPatient(name, contact_info, roomID, doctorID)
-    }
+    const {
+      password,
+      email,
+      role,
+      name,
+      roomID,
+      major,
+      shift,
+      contact_info,
+      doctorID,
+    } = createuser;
 
+    if (role === 'patient') {
+      return this.createPatient(name, contact_info, roomID, doctorID);
+    }
 
     const reaptedEmail = await this.userRepo.findOne({
       where: { email: email },
@@ -53,8 +60,6 @@ export class userServices {
     }
     const hashpassword = await argon.hash(password);
     console.log('hashed : ', hashpassword);
-    
-
 
     const newUser = this.userRepo.create({
       ...createuser,
@@ -64,41 +69,46 @@ export class userServices {
 
     const saveUSer = await this.userRepo.save(newUser);
 
-
     if (role === 'doctor') {
       if (!major || !email) {
         throw new BadRequestException('Major or email  is required for nurses');
       }
-      return this.createDoctor(name,major,hashpassword,newUser)
+      return this.createDoctor(name, major, hashpassword, newUser);
     }
     if (role === 'nurse') {
       if (!major || !email) {
         throw new BadRequestException('Major or email  is required for nurses');
       }
-     return this.createNurse(email,name,major,hashpassword,newUser,shift)
+      return this.createNurse(email, name, major, hashpassword, newUser, shift);
     }
-    if(role==='admin'){
+    if (role === 'admin') {
       if (!email) {
         throw new BadRequestException('Email is required for admin users');
       }
-      return this.CreateAdmin(name,email,hashpassword,newUser)
+      return this.CreateAdmin(name, email, hashpassword, newUser);
     }
 
     return saveUSer;
   }
 
-
-
-  private async createPatient(name: string, contact_info: string, roomID?: number, doctorID?: number) {
+  private async createPatient(
+    name: string,
+    contact_info: string,
+    roomID?: number,
+    doctorID?: number,
+  ) {
     if (!name || !contact_info) {
-      throw new BadRequestException('Name and contact info are required for patients');
+      throw new BadRequestException(
+        'Name and contact info are required for patients',
+      );
     }
 
     let room: Room | null = null;
     if (roomID) {
       room = await this.RoomRepo.findOne({ where: { id: roomID } });
       if (!room) throw new BadRequestException('Room not found');
-      if (!room.available) throw new BadRequestException('This room is unavailable');
+      if (!room.available)
+        throw new BadRequestException('This room is unavailable');
 
       room.available = false;
       await this.RoomRepo.save(room);
@@ -128,8 +138,12 @@ export class userServices {
     return this.patientRepo.save(patient);
   }
 
-  private async createDoctor(name:string,major:string,password:string,user:User){
-
+  private async createDoctor(
+    name: string,
+    major: string,
+    password: string,
+    user: User,
+  ) {
     const doctor = this.doctorRepo.create({
       name,
       major: major, // Assuming major is part of createUserParam
@@ -139,35 +153,45 @@ export class userServices {
     await this.doctorRepo.save(doctor);
     return doctor;
   }
-  private async createNurse(email:string,name:string,major:string,password:string,user:User,shift:string){
+  private async createNurse(
+    email: string,
+    name: string,
+    major: string,
+    password: string,
+    user: User,
+    shift: string,
+  ) {
     const nurse = this.nurseRepo.create({
       email,
       name,
       major,
       password,
-      user_id:user,
+      user_id: user,
       shift: shift,
-    }); 
-    console.log('debugging ',nurse);
-     
+    });
+    console.log('debugging ', nurse);
+
     await this.nurseRepo.save(nurse);
     return nurse;
-
   }
-  private async CreateAdmin(name:string,email:string,password:string,user):Promise<Admin>{
-   
-    const admin=this.adminRepo.create({
-        name,
-        email,
-        password,
-        user:user.id
-    })
+  private async CreateAdmin(
+    name: string,
+    email: string,
+    password: string,
+    user,
+  ): Promise<Admin> {
+    const admin = this.adminRepo.create({
+      name,
+      email,
+      password,
+      user: user.id,
+    });
     await this.adminRepo.save(admin);
     return admin;
   }
 
   async findOneUser(id: number) {
-    const user = await this.userRepo.findOne({where:{ id }});
+    const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('this user not exist');
     }
@@ -175,19 +199,16 @@ export class userServices {
     return user;
   }
   async updateUser(id: number, updateUser: updateDto) {
-    const user= await this.userRepo.findOne({where:{id} });
-    if(!user){
-      throw new UnauthorizedException("this user not exist");
-
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) {
+      throw new UnauthorizedException('this user not exist');
     }
-   
-    await this.userRepo.update({id},{...updateUser})
-    return this.userRepo.findOne({where:{id}})
 
+    await this.userRepo.update({ id }, { ...updateUser });
+    return this.userRepo.findOne({ where: { id } });
   }
-  
+
   async deleteUser(id: number) {
     return await this.userRepo.delete({ id });
   }
-  
 }

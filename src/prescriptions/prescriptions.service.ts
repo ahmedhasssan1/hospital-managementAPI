@@ -56,6 +56,9 @@ export class PrescriptionsService {
     }
     async updatePresc(updateDto:updateDto,id:number){
         const findPatient=await this.PatientService.findOne({where:{id}})
+        if(!findPatient){
+            throw new NotFoundException("this patient not exit any more")
+        }
         const findPresc=await this.prescreptionRepo.update({patient:{id}},{...updateDto})
         if(!findPresc){
             throw new NotFoundException("this presc not exit")
@@ -70,7 +73,7 @@ export class PrescriptionsService {
             throw new NotFoundException("this patient not exit")
         }
 
-        const findPrescToDelete=await this.prescreptionRepo.delete({patient:findPatient});
+        await this.prescreptionRepo.delete({patient:findPatient});
     
         return 'Prescriptions deleted successfully for the patient';
 

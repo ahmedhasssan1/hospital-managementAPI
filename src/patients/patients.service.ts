@@ -4,11 +4,14 @@ import { Patient } from './typeOrm/patient.entity';
 import { Repository } from 'typeorm';
 import { Doctor } from 'src/doctor/typeOrm/doctor.entity';
 import { addDoc } from './dto/addDoc.dto';
+import { RoomPatientDto } from './dto/roomPatient.dto';
+import { Room } from 'src/rooms/entity/room.entity';
 
 @Injectable()
 export class PatientsService {
     constructor(@InjectRepository(Patient) private PatientRepo:Repository<Patient>,
-    @InjectRepository(Doctor) private DocRepo:Repository<Doctor>
+    @InjectRepository(Doctor) private DocRepo:Repository<Doctor>,
+    @InjectRepository(Room) private RoomRepo:Repository<Room>
 
 ){}
 
@@ -40,5 +43,24 @@ export class PatientsService {
         await this.PatientRepo.save(findPatient);
         return{message:"doctor added succesfully"};
         
+    }
+    async addRoomToPatient(roomPatient:RoomPatientDto){
+        const patient=await this.PatientRepo.findOne({where:{id:roomPatient.patientID}})
+        if(!patient || patient.room){
+            throw new NotFoundException("this patient not exist or already it has room")
+        }
+        const room=await this.RoomRepo.findOne({where:{id:roomPatient.roomID}})
+        if(!room || !room.available){
+            throw new NotFoundException("this room not exist or room busy")
+        }
+        patient.room=room;
+        room.available=false;
+        
+        await this.PatientRepo.save(patient);
+        await this.RoomRepo.save(room);
+        
+        return { message: "Room assigned to patient successfully", patient };
+
+
     }       
 }

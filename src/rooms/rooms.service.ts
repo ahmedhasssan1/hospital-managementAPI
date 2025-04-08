@@ -40,4 +40,12 @@ export class RoomsService {
         const FreeRooms=await this.roomRepo.find({where:{available:true}});
         return FreeRooms;
     }
+    async deleteRoom(id:number){
+        const room=await this.roomRepo.findOne({where:{id}});
+        if(!room){
+            throw new NotFoundException("this room not exist");
+        }
+        await this.roomRepo.delete(id)
+        return {message:`the room with id ${id}  has been deleted`,room}
+    }
 }

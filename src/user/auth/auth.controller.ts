@@ -6,7 +6,7 @@ import { authPayload } from './dto/create-auth.dto';
 import { changePass } from './dto/change-pass';
 import { emailDto } from './dto/emailCheck';
 import { ResetPass } from './dto/resetPassword-dto';
-import { User } from 'src/common/entities/users.entity';
+import { User } from 'src/user/entitiy/users.entity';
 import { Roles } from './rolesAuth/role.descerotaor';
 @Controller('auth')
 export class AuthController {

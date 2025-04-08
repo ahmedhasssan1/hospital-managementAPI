@@ -9,8 +9,6 @@ export class prescriptions{
     @ManyToOne(()=>Patient,(patient)=>patient.prescription,{onDelete:"CASCADE"})
     patient:Patient;
     
-    
-    
   
     @Column({type:"text"})
     medcation_text:string;

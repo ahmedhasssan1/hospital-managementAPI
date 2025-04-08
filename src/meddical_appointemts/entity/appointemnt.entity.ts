@@ -1,20 +1,15 @@
-import { Doctor } from "src/doctor/typeOrm/doctor.entity";
 import { Patient } from "src/patients/typeOrm/patient.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'appointment'})
 export class medicalAppointments{
-    @PrimaryGeneratedColumn()
-    id:number;
+  @PrimaryGeneratedColumn()
+  id:number;
 
+  @ManyToOne(()=>Patient,(patient)=>patient.medicalAppointments,{onDelete:"CASCADE"})
+  patient_id:Patient;
 
-    @ManyToOne(()=>Patient,(patient)=>patient.medicalAppointments,{onDelete:"CASCADE"})
-    patient_id:Patient;
-
-   @ManyToOne(() => Doctor, (doctor) => doctor.medicalAppointments) 
-   doctor: Doctor; // Foreign key reference to DOCTORS.ID
-
-  @Column({ type: "timestamp" }) 
+  @Column({ type: "date" }) 
   date: Date;
 
   @Column({ type: "varchar", length: 20 })

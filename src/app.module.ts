@@ -13,7 +13,7 @@ import { MeddicalAppointemtsModule } from './meddical_appointemts/meddical_appoi
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { Doctor } from './doctor/typeOrm/doctor.entity';
 import { AdminModule } from './admin/admin.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { treansformInterceptor } from './common/interceptor/custom.interceptor';
 
 @Module({
@@ -51,7 +51,7 @@ import { treansformInterceptor } from './common/interceptor/custom.interceptor';
     {
       provide:APP_INTERCEPTOR,
       useClass:treansformInterceptor
-    }
+    },
   ],
 })
 export class AppModule {}

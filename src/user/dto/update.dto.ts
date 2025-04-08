@@ -2,8 +2,6 @@ import { IsOptional } from "class-validator";
 
 export class updateDto {
   password: string;
-
-
 }
 export class updateUser{
     name:string;
