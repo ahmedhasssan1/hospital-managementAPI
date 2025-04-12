@@ -9,10 +9,11 @@ import { Patient } from 'src/patients/typeOrm/patient.entity';
 import { Room } from 'src/rooms/entity/room.entity';
 import { RoomsModule } from 'src/rooms/rooms.module';
 import { Admin } from 'src/admin/entity/admin.entity';
+import { receptionist } from 'src/receptionists/entity/receptionist.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Doctor, Nurse, Patient, Room, Admin]),
+    TypeOrmModule.forFeature([User, Doctor, Nurse, Patient, Room, Admin,receptionist]),
     RoomsModule,
   ],
   controllers: [UserController],

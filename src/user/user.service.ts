@@ -15,6 +15,7 @@ import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { Patient } from 'src/patients/typeOrm/patient.entity';
 import { Room } from 'src/rooms/entity/room.entity';
 import { Admin } from 'src/admin/entity/admin.entity';
+import { receptionist } from 'src/receptionists/entity/receptionist.entity';
 
 @Injectable()
 export class userServices {
@@ -25,6 +26,7 @@ export class userServices {
     @InjectRepository(Patient) private patientRepo: Repository<Patient>,
     @InjectRepository(Room) private RoomRepo: Repository<Room>,
     @InjectRepository(Admin) private adminRepo: Repository<Admin>,
+    @InjectRepository(receptionist) private receptionRepo: Repository<receptionist>,
   ) {}
 
   async findUsers() {
@@ -86,6 +88,12 @@ export class userServices {
         throw new BadRequestException('Email is required for admin users');
       }
       return this.CreateAdmin(name, email, hashpassword, newUser);
+    }
+    if(role==='receptionist'){
+      if(!name || !email){
+        throw new BadRequestException('This receptionist must have a valid name and email');
+      }
+      return this.CrerateReceptionst(name, email, hashpassword, newUser,shift);
     }
 
     return saveUSer;
@@ -178,18 +186,34 @@ export class userServices {
     name: string,
     email: string,
     password: string,
-    user,
+    user:User,
   ): Promise<Admin> {
     const admin = this.adminRepo.create({
       name,
       email,
       password,
-      user: user.id,
+      user,
     });
     await this.adminRepo.save(admin);
     return admin;
   }
-
+  private async CrerateReceptionst(
+    name: string,
+    email: string,
+    password: string,
+    user: User,
+    shift:string
+  ): Promise<receptionist> {
+    const receptionist = this.receptionRepo.create({
+      name,
+      email,
+      password,
+      user,
+      shift,
+    });
+    await this.receptionRepo.save(receptionist);
+    return receptionist;
+  }
   async findOneUser(id: number) {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {

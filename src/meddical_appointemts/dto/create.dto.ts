@@ -5,7 +5,9 @@ export class createAppointementDto{
     @IsNumber()
     patient_id:number;
     @IsDateString({strict:true},{message:"must to be in format yyyy-mm-dd"})
-    date:string    
+    date:string  
+    
     status:string
+
     description:string
 }

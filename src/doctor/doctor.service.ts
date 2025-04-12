@@ -8,12 +8,15 @@ import { createDoctorParam } from './dto/savedIndata';
 import { Nurse } from 'src/nurse/typeorm/nurse.entity';
 import { DocNurse, nurseDto } from './dto/doctorNurse.dto';
 import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
+import { UpdateDocDto } from './dto/update.dto';
+import { User } from 'src/user/entitiy/users.entity';
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor) private doctorRepo: Repository<Doctor>,
     @InjectRepository(Nurse) private nurseRepo: Repository<Nurse>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(prescriptions) private PrescRepo: Repository<prescriptions>,
     
   ) {}
@@ -57,8 +60,8 @@ export class DoctorService {
     return updateDoc;
 
   }
-  async getDoc(name:string):Promise<{patients:any[],nurses:any[]}>{
-    const findDoctor=await this.doctorRepo.findOne({where:{name:name},relations:['nurses','patients','patients.room','patients.prescription']})
+  async getDoc(id:number):Promise<{patients:any[],nurses:any[]}>{
+    const findDoctor=await this.doctorRepo.findOne({where:{id},relations:['nurses','patients','patients.room','patients.prescription']})
     if(!findDoctor){
       throw new UnauthorizedException("this doctor is not exist")
       
@@ -85,6 +88,23 @@ export class DoctorService {
     return { message: 'Nurse removed from the doctor successfully' };
 
 
+
+  }
+  async updateDoctor(updateDto:UpdateDocDto,id:number){
+    const findDoc=await this.doctorRepo.findOne({where:{id},relations:['user_id']});
+    if(!findDoc){
+      throw new NotFoundException("this doctor not exist")
+    }
+    await this.doctorRepo.update(id,{...updateDto})
+    const finduser=await this.userRepo.findOne({where:{id:findDoc.user_id.id}});
+    if(!finduser){
+      throw new NotFoundException("this user not exist (doctor)");
+    }
+
+    await this.userRepo.update(findDoc.user_id.id,{...updateDto})
+
+
+    return await this.doctorRepo.findOne({where:{id}})
 
   }
   

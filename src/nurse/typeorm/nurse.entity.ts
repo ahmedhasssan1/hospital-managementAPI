@@ -35,5 +35,6 @@ export class Nurse {
   shift: string;
 
   @ManyToOne(() => Doctor, (doctor) => doctor.nurses, { onDelete: 'SET NULL' })
+  @JoinColumn()
   doctor: Doctor;
 }

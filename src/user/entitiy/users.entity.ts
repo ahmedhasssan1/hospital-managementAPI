@@ -1,3 +1,4 @@
+import { USerRole } from 'src/common/enum/Role.enum';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 
@@ -23,7 +24,7 @@ export class User {
   @CreateDateColumn({type:'timestamp'}) 
   createAt: Date;
 
-  @Column()
+  @Column({type:'enum',enum:USerRole,default:USerRole.Patient})
   role: string;
 
 

@@ -24,10 +24,10 @@ export class PrescriptionsService {
         if(!patientDoctor){
             throw new NotFoundException("this doctor not exist")
         }
-        // const patient=await this.PatientService.findOne({where:{id:creatPresc.patient}})
-        // const addPresToPatient=patient?.prescription=creatPresc.prescrption
+        const patients:Patient[]=[];
+        patients.push(findpatient)
         const newPresc=this.prescreptionRepo.create({
-            patient:findpatient,
+            patient:patients,
             doctorName:patientDoctor.name,
             patientName:findpatient.name,
             medcation_text:creatPresc.prescrption

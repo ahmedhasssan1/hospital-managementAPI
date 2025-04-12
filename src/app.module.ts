@@ -13,8 +13,9 @@ import { MeddicalAppointemtsModule } from './meddical_appointemts/meddical_appoi
 import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { Doctor } from './doctor/typeOrm/doctor.entity';
 import { AdminModule } from './admin/admin.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import {  APP_INTERCEPTOR } from '@nestjs/core';
 import { treansformInterceptor } from './common/interceptor/custom.interceptor';
+import { ReceptionistsModule } from './receptionists/receptionists.module';
 
 @Module({
   imports: [
@@ -24,17 +25,19 @@ import { treansformInterceptor } from './common/interceptor/custom.interceptor';
     UserModule,
     AuthModule,
     TypeOrmModule.forRoot({
+    
       type: 'postgres',
       port: 4000,
       host: 'localhost',
       username: 'postgres',
       database: process.env.DATABASE,
       password: process.env.DATABASE_PASSWORD,
-      // entities: [User, ResetToken,Doctor],
-      // entities: [__dirname + '/../**/*.entity.ts'],
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+      entities: [__dirname + '/../**/*.entity.js'],
+      migrations: [__dirname + '/../migrations/*.{ts,js}'],
+      synchronize:true,
+     
+
+}),
 
     DoctorModule,
     PatientsModule,
@@ -44,7 +47,8 @@ import { treansformInterceptor } from './common/interceptor/custom.interceptor';
     MeddicalAppointemtsModule,
     PrescriptionsModule,
     TypeOrmModule.forFeature([Doctor]),
-    AdminModule, // Include it here too
+    AdminModule,
+    ReceptionistsModule, 
   ],
   controllers: [AppController],
   providers: [AppService,

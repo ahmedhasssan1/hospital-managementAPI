@@ -7,6 +7,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -27,10 +29,7 @@ export class Patient {
   @Column()
   contact_info: string;
 
-  @ManyToOne(() => Doctor, (doctor) => doctor.patients, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(() => Doctor, (doctor) => doctor.patients, {nullable: true,onDelete: 'SET NULL',})
   @JoinColumn()
   doctor: Doctor | null; //docotor_id=docotor.id
 
@@ -38,15 +37,10 @@ export class Patient {
   @JoinColumn()
   room: Room;
 
-  @OneToMany(
-    () => medicalAppointments,
-    (medicalAppointments) => medicalAppointments.patient_id,
-    { onDelete: 'CASCADE' },
-  )
+  @OneToMany(() => medicalAppointments,(medicalAppointments) => medicalAppointments.patient_id,{ onDelete: 'CASCADE' })
   medicalAppointments: medicalAppointments[];
 
-  @OneToMany(() => prescriptions, (prescriprion) => prescriprion.patient, {
-    onDelete: 'CASCADE',
-  })
-  prescription: prescriptions;
+  @ManyToMany(() => prescriptions, (prescriprion) => prescriprion.patient, {onDelete: 'CASCADE',})
+  @JoinTable({name:"patient_prescription_table"})
+  prescription: prescriptions[];
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { DoctorService } from './doctor.service';
 import { createDoctorDto } from './dto/createDoc.dto';
 import { DocNurse, nurseDto } from './dto/doctorNurse.dto';
@@ -6,6 +6,7 @@ import { RolesGuard } from 'src/user/auth/rolesAuth/role.guard';
 import { Roles } from 'src/user/auth/rolesAuth/role.descerotaor';
 import { USerRole } from 'src/common/enum/Role.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateDocDto } from './dto/update.dto';
 
 @Controller('doctor')
 export class DoctorController {
@@ -23,9 +24,9 @@ export class DoctorController {
 
   @UseGuards(AuthGuard('jwt'),RolesGuard)
   @Roles(USerRole.doctor,USerRole.admin)
-  @Get('getDoc')
-  getDoctor(@Body('name') name:string){
-    return this.doctorService.getDoc(name)
+  @Get('getDoc/:id')
+  getDoctor(@Param('id',ParseIntPipe)id:number){
+    return this.doctorService.getDoc(id)
   }
 
   @UseGuards(AuthGuard('jwt'),RolesGuard)
@@ -34,5 +35,9 @@ export class DoctorController {
   deleteNurse(@Param('id',ParseIntPipe)id:number,@Body() nurse:nurseDto){
     return this.doctorService.deleteNurseFromDocoor(id,nurse)
 
+  }
+  @Patch('updateDoctor/:id')
+  updateDoc(@Body() updatedDto:UpdateDocDto, @Param('id', ParseIntPipe) id: number) {
+    return this.doctorService.updateDoctor( updatedDto,id);
   }
 }
