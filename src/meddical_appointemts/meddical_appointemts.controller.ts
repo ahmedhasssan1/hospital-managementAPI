@@ -8,11 +8,11 @@ export class MeddicalAppointemtsController {
   constructor(private readonly meddicalAppointemtsService: MeddicalAppointemtsService) {}
   
   @Post('createAppointment')
-  createAppo(@Body() createAppo:createAppointementDto){
+  createAppointment(@Body() createAppo:createAppointementDto){
     return this.meddicalAppointemtsService.createAppointement(createAppo);
   }
   @Delete(":id")
-  deleteappo(@Param('id',ParseIntPipe)id:number){
+  deleteappointment(@Param('id',ParseIntPipe)id:number){
     return this.meddicalAppointemtsService.deleteAppointment(id);
   }
   @Patch('updateAppointment')
@@ -21,7 +21,7 @@ export class MeddicalAppointemtsController {
   }
   @Get(':id')
   AppoInfo(@Param('id',ParseIntPipe)id:number){
-    return this.meddicalAppointemtsService.getAppo(id);
+    return this.meddicalAppointemtsService.getAppointment(id);
   }
   
 }

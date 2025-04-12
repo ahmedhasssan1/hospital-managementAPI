@@ -47,7 +47,7 @@ export class MeddicalAppointemtsService {
         };
 
     }
-    async getAppo(id:number){
+    async getAppointment(id:number){
         const appointemnt=await this.appointmentRepo.findOne({where:{id}})
         
         if(!appointemnt){

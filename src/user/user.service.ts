@@ -30,7 +30,11 @@ export class userServices {
   ) {}
 
   async findUsers() {
-    return this.userRepo.find();
+    const findAllUsers=await this.userRepo.find();
+    if(!findAllUsers){
+      throw new NotFoundException("no users exist");
+    }
+    return findAllUsers;
   }
 
   async findOne(email: string): Promise<User | null> {
