@@ -14,7 +14,7 @@ export class User {
   @Column({nullable:true})
   email: string;
 
-
+  nn
   @Column({nullable:true})
   password: string;
 

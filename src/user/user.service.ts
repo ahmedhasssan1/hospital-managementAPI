@@ -57,13 +57,16 @@ export class userServices {
     if (role === 'patient') {
       return this.createPatient(name, contact_info, roomID, doctorID);
     }
-
+    if(email && !password){
+      throw new BadRequestException('password must be provided to this email')
+    }
     const reaptedEmail = await this.userRepo.findOne({
       where: { email: email },
     });
     if (reaptedEmail) {
       throw new BadRequestException('this user already exist ');
     }
+   
     const hashpassword = await argon.hash(password);
     console.log('hashed : ', hashpassword);
 
@@ -76,7 +79,7 @@ export class userServices {
     const saveUSer = await this.userRepo.save(newUser);
 
     if (role === 'doctor') {
-      if (!major || !email) {
+      if (!major || !email ) {
         throw new BadRequestException('Major or email  is required for nurses');
       }
       return this.createDoctor(name, major, hashpassword, newUser);
