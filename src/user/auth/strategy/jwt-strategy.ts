@@ -17,10 +17,14 @@ export interface AuthResult {
 @Injectable()
 export class jwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
+    const secret = configService.get<string>('SECRET_API');
+    if (!secret) {
+      throw new Error('SECRET_API environment variable is not defined');
+    }
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: '123',
+      secretOrKey: secret
     });
   }
 

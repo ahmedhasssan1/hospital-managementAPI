@@ -18,7 +18,7 @@ export class AuthController {
   }
   @UseGuards(jwtauthGuard)
   @Post('Profile')
-  jwtAuth(@Request() req): User {
+  jwtAuth(@Request() req: Request & { user: User }): User {
     return req.user;
   }
 
