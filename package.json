@@ -18,9 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:migrate": "yarn build && typeorm migration:run -d dist/dbMigration/data-source.js",
-    "typeorm:generate": "yarn build && typeorm migration:generate -d dist/dbMigration/data-source.js -n",
-    "typeorm:revert": "typeorm migration:revert -d dist/dbMigration/data-source.js"
+    "migrate": "node-pg-migrate"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -41,11 +39,12 @@
     "dotenv": "^16.4.7",
     "mysql2": "^3.12.0",
     "nanoid": "^5.1.0",
+    "node-pg-migrate": "^7.9.1",
     "nodemailer": "^6.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "pg": "^8.13.3",
+    "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",

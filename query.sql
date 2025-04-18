@@ -1,2 +1,3 @@
--- SELECT * from patient_prescription_table;   
-SELECT *  from doctor;    
+select * 
+from users 
+join patient on patient.userid = users.id;
