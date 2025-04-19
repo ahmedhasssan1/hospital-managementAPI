@@ -11,6 +11,7 @@ import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
 import { UpdateDocDto } from './dto/update.dto';
 import { User } from 'src/user/entitiy/users.entity';
 
+
 @Injectable()
 export class DoctorService {
   constructor(
@@ -45,17 +46,18 @@ export class DoctorService {
       throw new NotFoundException('this nurse not existing')
     }
     
+    
     nurses.push(findNurse);
     const findDoc=await this.doctorRepo.findOne({where:{name:nurseDocDto.doctorName},relations:['nurses']})
     if(!findDoc){
       throw new NotFoundException("this user is not exist")
     }
+  if(findDoc.nurses.some((nurse)=>nurse.id===findNurse.id)){
+    throw new Error('this nurse already  exit with that doctor')
+  }
 
  
     findDoc.nurses=[findNurse];
-
-
-
     const updateDoc= await this.doctorRepo.save(findDoc);
     return updateDoc;
 
