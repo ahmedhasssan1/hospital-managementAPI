@@ -8,7 +8,7 @@ exports.shorthands = undefined;
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
-exports.up = (pgm) => {
+up = (pgm) => {
     pgm.sql(`
         ALTER TABLE doctor
         RENAME COLUMN "userIdId" TO "user_id";
@@ -20,7 +20,7 @@ exports.up = (pgm) => {
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
-exports.down = (pgm) => {
+down = (pgm) => {
     pgm.sql(`
         ALTER TABLE doctor
         RENAME COLUMN "user_id" TO "userIdId";

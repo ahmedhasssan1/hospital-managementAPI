@@ -6,7 +6,7 @@ exports.shorthands = undefined;
 /**
  * @param pgm {import('node-pg-migrate').MigrationBuilder}
  */
-exports.up = (pgm) => {
+up = (pgm) => {
   pgm.sql(`
     CREATE TABLE bills (
       id SERIAL PRIMARY KEY,
@@ -20,7 +20,7 @@ exports.up = (pgm) => {
 /**
  * @param pgm {import('node-pg-migrate').MigrationBuilder}
  */
-exports.down = (pgm) => {
+down = (pgm) => {
   pgm.sql(`
     DROP TABLE bills;
   `);

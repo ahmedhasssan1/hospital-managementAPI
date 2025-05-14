@@ -22,4 +22,8 @@ export class PatientsController {
   addRoom(@Body()RoomPatient:RoomPatientDto){
     return this.patientsService.addRoomToPatient(RoomPatient);
   }
+  @Get('allPatients')
+  findAllPatients(){
+    return this.patientsService.getAllPatients();
+  }
 }

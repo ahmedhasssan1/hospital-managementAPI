@@ -62,5 +62,12 @@ export class PatientsService {
         return { message: "Room assigned to patient successfully", patient };
 
 
-    }       
+    }  
+    async getAllPatients(){
+        const patients=await this.PatientRepo.find();
+        if(!patients){
+            throw new NotFoundException('there is no patients');
+        }
+        return patients;
+    }    
 }

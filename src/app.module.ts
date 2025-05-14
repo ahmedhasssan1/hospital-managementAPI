@@ -16,6 +16,7 @@ import { AdminModule } from './admin/admin.module';
 import {  APP_INTERCEPTOR } from '@nestjs/core';
 import { treansformInterceptor } from './common/interceptor/custom.interceptor';
 import { ReceptionistsModule } from './receptionists/receptionists.module';
+import { BillsModule } from './bills/bills.module';
 
 @Module({
   imports: [
@@ -46,9 +47,9 @@ import { ReceptionistsModule } from './receptionists/receptionists.module';
     AdminModule,
     MeddicalAppointemtsModule,
     PrescriptionsModule,
-    TypeOrmModule.forFeature([Doctor]),
     AdminModule,
-    ReceptionistsModule, 
+    ReceptionistsModule,
+    BillsModule, 
   ],
   controllers: [AppController],
   providers: [AppService,

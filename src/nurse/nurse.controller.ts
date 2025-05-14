@@ -16,9 +16,15 @@ export class NurseController {
     return this.nurseService.updateNurse(updateDto,id)
 
   }
+  @Get('allNurses')
+  allNurses(){
+    console.log('debugging ' );
+    return this.nurseService.getAllNurses();
+  }
   @Get(':id')
   getNurseInfo(@Param('id',ParseIntPipe)id:number){
     return this.nurseService.findNurse(id);
   }
+ 
 
 }

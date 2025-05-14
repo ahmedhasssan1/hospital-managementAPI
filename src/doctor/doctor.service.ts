@@ -10,13 +10,14 @@ import { DocNurse, nurseDto } from './dto/doctorNurse.dto';
 import { prescriptions } from 'src/prescriptions/entity/prescripttion.entity';
 import { UpdateDocDto } from './dto/update.dto';
 import { User } from 'src/user/entitiy/users.entity';
+import { NurseService } from 'src/nurse/nurse.service';
 
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor) private doctorRepo: Repository<Doctor>,
-    @InjectRepository(Nurse) private nurseRepo: Repository<Nurse>,
+     private nurseRepo:NurseService,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(prescriptions) private PrescRepo: Repository<prescriptions>,
     
@@ -40,8 +41,7 @@ export class DoctorService {
   }
   async addNurseToDoc(nurseDocDto:DocNurse):Promise<Partial<Doctor>>{
     const nurses:Nurse[]=[];
-    const findNurse=await this.nurseRepo.findOne({where:{name:nurseDocDto.nurseName}
-    });
+    const findNurse=await this.nurseRepo.findNurse(nurseDocDto.id);
     if(!findNurse){
       throw new NotFoundException('this nurse not existing')
     }
@@ -53,7 +53,7 @@ export class DoctorService {
       throw new NotFoundException("this user is not exist")
     }
   if(findDoc.nurses.some((nurse)=>nurse.id===findNurse.id)){
-    throw new Error('this nurse already  exit with that doctor')
+    throw new UnauthorizedException('this nurse already  exit with that doctor')
   }
 
  
@@ -65,7 +65,7 @@ export class DoctorService {
   async getDoc(id:number):Promise<{patients:any[],nurses:any[]}>{
     const findDoctor=await this.doctorRepo.findOne({where:{id},relations:['nurses','patients','patients.room','patients.prescription']})
     if(!findDoctor){
-      throw new UnauthorizedException("this doctor is not exist")
+      throw new UnauthorizedException ("this doctor is not exist")
       
     }
     return findDoctor;
@@ -75,7 +75,7 @@ export class DoctorService {
      if(!doctor){
       throw new NotFoundException("this doctor no more exist");
     }
-    const nurse=await this.nurseRepo.findOne({where:{name:NurseDoc.nurse}})
+    const nurse=await this.nurseRepo.findNurse(NurseDoc.id)
     if(!nurse){
       throw new NotFoundException("this nurse not exist") 
     }
@@ -108,6 +108,13 @@ export class DoctorService {
 
     return await this.doctorRepo.findOne({where:{id}})
 
+  }
+  async getAllDoctors(){
+    const doctors=await this.doctorRepo.find();
+    if(!doctors){
+      throw new NotFoundException("no doctor exist")
+    }
+    return doctors
   }
   
 }

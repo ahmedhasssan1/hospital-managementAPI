@@ -47,6 +47,13 @@ export class NurseService {
       throw new NotFoundException(' this nurse not exist');
     }
 
-    return { nurse };
+    return  nurse ;
+  }
+  async  getAllNurses(){
+    const allNurses=await this.nurseRepo.find();
+    if(!allNurses){
+      throw new NotFoundException("no  nurses exist in hopital");
+    }
+    return allNurses;
   }
 }

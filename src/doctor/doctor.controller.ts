@@ -11,6 +11,10 @@ import { UpdateDocDto } from './dto/update.dto';
 @Controller('doctor')
 export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
+  @Get('allDoctors')
+  getAllDoctors(){
+    return this.doctorService.getAllDoctors()
+  }
 
   @Post('newDoc')
   createNewDoctor(@Body() createDoc:createDoctorDto){
@@ -40,4 +44,5 @@ export class DoctorController {
   updateDoc(@Body() updatedDto:UpdateDocDto, @Param('id', ParseIntPipe) id: number) {
     return this.doctorService.updateDoctor( updatedDto,id);
   }
+
 }

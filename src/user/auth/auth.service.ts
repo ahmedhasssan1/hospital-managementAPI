@@ -137,4 +137,5 @@ export class AuthService {
     console.log(newHashPass);
     await this.userservice.updateUser(findUser.id, { password: newHashPass });
   }
+  
 }
